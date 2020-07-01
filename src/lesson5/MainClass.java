@@ -22,13 +22,30 @@ public class MainClass {
         CyclicBarrier cb = new CyclicBarrier(CARS_COUNT);
 
         Car[] cars = new Car[CARS_COUNT];
+        /*
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        ВОПРОС 1. cwl и cb по сути общие объекты для всего класса, но я их передаю как параметры для конструктора.
+        понимаю что видимо нужно их как то передать ранее при создании массива машин, но как это сделать не совсем понимаю.
+        и что это за конструкция ниже. static {*} в какой момент времени это вызывается?
 
+        public class Car implements Runnable {
+        private static int CARS_COUNT;
+        static {
+            CARS_COUNT = 0;
+        }
+         */
         for (int i = 0; i < cars.length; i++) {
             cars[i] = new Car(race, 20 + (int) (Math.random() * 10),cwl,cb);
         }
         for (int i = 0; i < cars.length; i++) {
             new Thread(cars[i]).start();
         }
+        /*
+        !!!!!!!!!!!
+        ВОПРОС 2. cb проверяет готовность всех машин к старту внутри класса Car. и как все готовы, гонка начинается.
+        но сообщение "Гонка началась" выводится на экран ранее чем фактически она началась. Можно ли в классе MAIN проверить   cb.await()?
+        или еще делать одну защелку такую как сделал при завершении cwl2.await()?
+         */
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
         try {
             cwl.await();
